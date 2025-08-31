@@ -18,8 +18,8 @@
 go.work
 
 # Build output
-git-report
-git-report.exe
+/git-report
+/git-report.exe
 
 # CSV output files (generated reports)
 *.csv

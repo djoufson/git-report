@@ -6,14 +6,23 @@ import (
 )
 
 func TestNewParser(t *testing.T) {
-	parser := NewParser()
+	parser := NewParser(".")
 	if parser == nil {
 		t.Fatal("NewParser() returned nil")
+	}
+	
+	if parser.repoPath != "." {
+		t.Errorf("Expected repoPath '.', got '%s'", parser.repoPath)
+	}
+	
+	parser2 := NewParser("")
+	if parser2.repoPath != "." {
+		t.Errorf("Expected empty path to default to '.', got '%s'", parser2.repoPath)
 	}
 }
 
 func TestParseCommits(t *testing.T) {
-	parser := NewParser()
+	parser := NewParser(".")
 	
 	mockOutput := `abc123|abc1|John Doe|john@example.com|1640995200|Initial commit
 1	0	README.md

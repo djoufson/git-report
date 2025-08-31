@@ -52,6 +52,12 @@ Generate a report for all commits in the last 30 days:
 
 # Combine filters
 ./git-report --since "2023-06-01" --author "john" --output june-john.csv
+
+# Analyze different repository
+./git-report --repo-path /path/to/other/repo --output other-repo.csv
+
+# Use relative path
+./git-report --repo-path ../sibling-project --verbose
 ```
 
 ## Command Line Options
@@ -63,6 +69,7 @@ Generate a report for all commits in the last 30 days:
 | `--until` | `-u` | End date (YYYY-MM-DD) | `--until "2023-12-31"` |
 | `--author` | `-a` | Filter by author (can specify multiple) | `--author "john@example.com"` |
 | `--branches` | `-b` | Specific branches to analyze | `--branches "main"` |
+| `--repo-path` | `-r` | Path to git repository | `--repo-path /path/to/repo` |
 | `--verbose` | `-v` | Enable verbose output | `--verbose` |
 | `--help` | `-h` | Show help information | `--help` |
 
@@ -153,6 +160,17 @@ Get commits from specific branches for release notes:
   --branches "main" \
   --since "2023-08-01" \
   --output release-commits.csv
+```
+
+### Multi-Repository Analysis
+
+Analyze commits across different repositories:
+
+```bash
+# Generate reports for multiple repositories
+./git-report --repo-path /path/to/frontend --output frontend-report.csv
+./git-report --repo-path /path/to/backend --output backend-report.csv
+./git-report --repo-path /path/to/mobile --output mobile-report.csv
 ```
 
 ## Error Handling

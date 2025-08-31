@@ -38,6 +38,8 @@ go mod tidy
 # Example usage
 ./git-report --verbose --output test-report.csv
 ./git-report --since "2023-01-01" --author "username"
+./git-report --repo-path /path/to/other/repo --output other-repo.csv
+./git-report --repo-path ../sibling-project --verbose
 ```
 
 ## Architecture Notes

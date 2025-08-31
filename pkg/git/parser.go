@@ -11,17 +11,23 @@ import (
 	"github.com/djoufson/git-report/internal/models"
 )
 
-type Parser struct{}
+type Parser struct{
+	repoPath string
+}
 
-func NewParser() *Parser {
-	return &Parser{}
+func NewParser(repoPath string) *Parser {
+	if repoPath == "" {
+		repoPath = "."
+	}
+	return &Parser{repoPath: repoPath}
 }
 
 func (p *Parser) GetLocalBranches() ([]string, error) {
 	cmd := exec.Command("git", "branch", "--format=%(refname:short)")
+	cmd.Dir = p.repoPath
 	output, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get branches: %w", err)
+		return nil, fmt.Errorf("failed to get branches from %s: %w", p.repoPath, err)
 	}
 
 	var branches []string
@@ -49,9 +55,10 @@ func (p *Parser) GetCommits(branch string, since, until *time.Time) ([]models.Co
 	args = append(args, branch)
 	
 	cmd := exec.Command("git", args...)
+	cmd.Dir = p.repoPath
 	output, err := cmd.Output()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get commits for branch %s: %w", branch, err)
+		return nil, fmt.Errorf("failed to get commits for branch %s from %s: %w", branch, p.repoPath, err)
 	}
 
 	return p.parseCommits(string(output), branch)

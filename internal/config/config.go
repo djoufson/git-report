@@ -8,5 +8,6 @@ type Config struct {
 	Authors   []string
 	Output    string
 	Branches  []string
+	RepoPath  string
 	Verbose   bool
 }

@@ -44,13 +44,14 @@ Git Report is a Go CLI tool that analyzes git commit history across all local br
 git-report [flags]
 
 Flags:
-  --since, -s     Start date (YYYY-MM-DD or relative like "1 week ago")
-  --until, -u     End date (YYYY-MM-DD or relative like "yesterday") 
-  --author, -a    Filter by author name/email (can specify multiple)
-  --output, -o    Output CSV file path (default: git-report.csv)
-  --branches, -b  Specific branches to analyze (default: all local branches)
-  --verbose, -v   Verbose output with progress information
-  --help, -h      Show help information
+  --since, -s       Start date (YYYY-MM-DD or relative like "1 week ago")
+  --until, -u       End date (YYYY-MM-DD or relative like "yesterday") 
+  --author, -a      Filter by author name/email (can specify multiple)
+  --output, -o      Output CSV file path (default: git-report.csv)
+  --branches, -b    Specific branches to analyze (default: all local branches)
+  --repo-path, -r   Path to git repository (default: current directory)
+  --verbose, -v     Verbose output with progress information
+  --help, -h        Show help information
 ```
 
 ## Technical Requirements
@@ -84,4 +85,10 @@ git-report --author "john.doe@company.com" --author "jane.smith"
 
 # Custom output file
 git-report --output reports/team-activity.csv --verbose
+
+# Analyze different repository
+git-report --repo-path /path/to/other/repo --output other-repo.csv
+
+# Relative path
+git-report --repo-path ../other-project --verbose
 ```

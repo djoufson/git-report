@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -32,13 +34,17 @@ func main() {
 	rootCmd.Flags().StringVarP(&cfg.Output, "output", "o", "git-report.csv", "Output CSV file path")
 	rootCmd.Flags().StringSliceVarP(&cfg.Authors, "author", "a", nil, "Filter by author name/email")
 	rootCmd.Flags().StringSliceVarP(&cfg.Branches, "branches", "b", nil, "Specific branches to analyze")
+	rootCmd.Flags().StringVarP(&cfg.RepoPath, "repo-path", "r", ".", "Path to git repository (default: current directory)")
 	rootCmd.Flags().BoolVarP(&cfg.Verbose, "verbose", "v", false, "Verbose output")
 
 	rootCmd.Flags().StringP("since", "s", "", "Start date (YYYY-MM-DD or relative)")
 	rootCmd.Flags().StringP("until", "u", "", "End date (YYYY-MM-DD or relative)")
 
 	rootCmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-		return parseDateFlags(cmd, &cfg)
+		if err := parseDateFlags(cmd, &cfg); err != nil {
+			return err
+		}
+		return validateConfig(&cfg)
 	}
 
 	if err := rootCmd.Execute(); err != nil {
@@ -85,13 +91,34 @@ func parseDate(dateStr string) (time.Time, error) {
 	return time.Time{}, fmt.Errorf("unsupported date format: %s", dateStr)
 }
 
+func validateConfig(cfg *config.Config) error {
+	absPath, err := filepath.Abs(cfg.RepoPath)
+	if err != nil {
+		return fmt.Errorf("invalid repository path %s: %w", cfg.RepoPath, err)
+	}
+	
+	cfg.RepoPath = absPath
+	
+	if _, err := os.Stat(cfg.RepoPath); os.IsNotExist(err) {
+		return fmt.Errorf("repository path does not exist: %s", cfg.RepoPath)
+	}
+	
+	gitDir := filepath.Join(cfg.RepoPath, ".git")
+	if _, err := os.Stat(gitDir); os.IsNotExist(err) {
+		return fmt.Errorf("not a git repository: %s (no .git directory found)", cfg.RepoPath)
+	}
+	
+	return nil
+}
+
 func generateReport(cfg *config.Config) error {
-	parser := git.NewParser()
+	parser := git.NewParser(cfg.RepoPath)
 	filter := filter.NewFilter()
 	exporter := csv.NewExporter()
 
 	if cfg.Verbose {
-		fmt.Println("Starting git report generation...")
+		fmt.Printf("Starting git report generation...\n")
+		fmt.Printf("Repository path: %s\n", cfg.RepoPath)
 	}
 
 	var branches []string
