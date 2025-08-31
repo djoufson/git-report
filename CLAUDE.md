@@ -11,17 +11,17 @@ Git Report is a Go CLI tool that inspects git log history for all local branches
 
 ## Development Commands
 
-Since this is a Go project, use standard Go tooling:
-
 ```bash
 # Build the project
-go build -o git-report
+go build -o git-report ./cmd/git-report
 
 # Run tests
 go test ./...
 
-# Run specific test
-go test -run TestFunctionName ./path/to/package
+# Run specific test package
+go test ./pkg/git
+go test ./pkg/csv
+go test ./pkg/filter
 
 # Format code
 go fmt ./...
@@ -34,13 +34,25 @@ go mod tidy
 
 # Run the tool
 ./git-report [flags]
+
+# Example usage
+./git-report --verbose --output test-report.csv
+./git-report --since "2023-01-01" --author "username"
 ```
 
 ## Architecture Notes
 
-This CLI tool should be structured as:
-- Main entry point handling CLI argument parsing
-- Core git log parsing logic
-- CSV export functionality
-- Date range and author filtering components
-- Comprehensive output formatting for git history analysis
+The project follows a clean architecture pattern:
+
+- **cmd/git-report/**: Main entry point with Cobra CLI framework
+- **pkg/git/**: Git command execution and log parsing
+- **pkg/csv/**: CSV file generation and export
+- **pkg/filter/**: Date range and author filtering logic
+- **internal/models/**: Core data structures (Commit)
+- **internal/config/**: Configuration management
+
+Key implementation details:
+- Uses `git log --pretty=format` with `--numstat` for comprehensive data
+- Processes commits with file change statistics
+- Supports multiple date formats and flexible filtering
+- Handles all local branches automatically unless specific branches are specified
