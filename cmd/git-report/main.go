@@ -14,13 +14,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version = "dev"
+
 func main() {
 	var cfg config.Config
 
 	rootCmd := &cobra.Command{
-		Use:   "git-report",
-		Short: "Generate CSV reports from git commit history",
-		Long:  "A CLI tool that analyzes git commit history across all local branches and exports the data to CSV format.",
+		Use:     "git-report",
+		Short:   "Generate CSV reports from git commit history",
+		Long:    "A CLI tool that analyzes git commit history across all local branches and exports the data to CSV format.",
+		Version: version,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return generateReport(&cfg)
 		},
