@@ -12,7 +12,7 @@ Thank you for considering contributing to Git Report! We welcome contributions f
 
 ### Prerequisites
 
-- Go 1.19 or later
+- Go 1.22 or later
 - Git installed and available in PATH
 
 ### Building and Testing

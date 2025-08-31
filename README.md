@@ -87,7 +87,7 @@ The generated CSV file contains the following columns:
 
 ### Requirements
 
-- Go 1.19 or later
+- Go 1.22 or later
 - Git installed and available in PATH
 
 ### Building

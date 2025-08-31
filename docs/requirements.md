@@ -56,7 +56,7 @@ Flags:
 ## Technical Requirements
 
 ### Dependencies
-- Go 1.19+ 
+- Go 1.22+ 
 - Git installed and accessible in PATH
 - Repository must be a valid git repository
 
